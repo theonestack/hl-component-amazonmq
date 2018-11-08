@@ -23,6 +23,8 @@ CfhighlanderTemplate do
       ComponentParam "SubnetPersistence#{az}"
     end
 
+    ComponentParam 'DnsDomain'
+
   end
 
 end
