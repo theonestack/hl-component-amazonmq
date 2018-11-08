@@ -97,7 +97,7 @@ CloudFormation do
     Name FnSub("#{hostname}.${EnvironmentName}.${DnsDomain}.")
     Type 'CNAME'
     TTL '60'
-    ResourceRecords [ FnSub('${Broker}-${Broker.ConfigurationRevision}.mq.${AWS::Region}.amazonaws.com') ]
+    ResourceRecords [ FnSub('${Broker}-1.mq.${AWS::Region}.amazonaws.com') ]
   end
 
   Output(:BrokerID) { Value(Ref(:Broker)) }
