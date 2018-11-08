@@ -1,14 +1,28 @@
 CfhighlanderTemplate do
-  DependsOn 'vpc@1.2.0'
+
+  Name "AmazonMQ"
+
+  DependsOn 'vpc'
+
   Parameters do
     ComponentParam 'EnvironmentName', 'dev', isGlobal: true
     ComponentParam 'EnvironmentType', 'development', isGlobal: true
-    MappingParam('InstanceType') do
-      map 'EnvironmentType'
-      attribute 'AmqInstanceType'
+    ComponentParam 'VPCId', type: 'AWS::EC2::VPC::Id'
+    ComponentParam 'InstanceType', 'mq.t2.micro'
+    ComponentParam 'EnableMultiAZ', false
+
+    security_groups.each do |name, sg|
+      ComponentParam name
+    end if defined? security_groups
+
+    users.each do |user|
+      ComponentParam "#{user['username']}AMQPassword", 'administrator', noEcho: true
     end
+
     maximum_availability_zones.times do |az|
-      ComponentParam "SubnetCompute#{az}"
+      ComponentParam "SubnetPersistence#{az}"
     end
+
   end
+
 end
