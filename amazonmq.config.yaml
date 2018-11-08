@@ -4,6 +4,8 @@ engine_version: '5.15.6'
 
 publicly_accessable: false
 
+hostname: amq
+
 logging:
   audit: false
   general: false

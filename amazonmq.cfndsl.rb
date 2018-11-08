@@ -92,6 +92,14 @@ CloudFormation do
 
   }
 
+  Route53_RecordSet(:AMQHostRecord) do
+    HostedZoneName FnSub('${EnvironmentName}.${DnsDomain}.')
+    Name FnSub("#{hostname}.${EnvironmentName}.${DnsName}.")
+    Type 'CNAME'
+    TTL '60'
+    ResourceRecords [ FnSub('${Broker}-${Broker.ConfigurationRevision}.mq.${AWS::Region}.amazonaws.com') ]
+  end
+
   Output(:BrokerID) { Value(Ref(:Broker)) }
 
 end
