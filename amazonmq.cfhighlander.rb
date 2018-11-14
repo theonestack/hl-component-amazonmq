@@ -15,10 +15,6 @@ CfhighlanderTemplate do
       ComponentParam name
     end if defined? security_groups
 
-    users.each do |user|
-      ComponentParam "#{user['username']}AMQPassword", 'administrator', noEcho: true
-    end
-
     maximum_availability_zones.times do |az|
       ComponentParam "SubnetPersistence#{az}"
     end
@@ -26,5 +22,7 @@ CfhighlanderTemplate do
     ComponentParam 'DnsDomain'
 
   end
+
+  LambdaFunctions 'ssm_custom_resources'
 
 end

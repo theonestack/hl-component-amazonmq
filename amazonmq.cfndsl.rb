@@ -48,8 +48,16 @@ CloudFormation do
 
   amq_users=[]
   users.each do |user|
+
+    Resource("#{user['username']}SSMSecureParameter") do
+      Type 'Custom::SSMSecureParameter'
+      Property 'ServiceToken',FnGetAtt('SSMSecureParameterCR','Arn')
+      Property 'Path', FnSub(user['ssm_path'])
+      Property 'Length', user['password_length'] if user.has_key?('password_length')
+    end
+
     user_object={}
-    user_object[:Password] = Ref("#{user['username']}AMQPassword")
+    user_object[:Password] = FnGetAtt("#{user['username']}SSMSecureParameter","Password")
     user_object[:Username] = user['username']
     user_object[:ConsoleAccess] = user['console_access'] if user.has_key?('console_access')
     user_object[:Groups] = user['groups'] if user.has_key?('groups')

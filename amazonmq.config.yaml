@@ -17,6 +17,7 @@ logging:
 
 users:
   - username: administrator
+    ssm_path: /amazonmq/administrator
     console_access: true
 
 # amq_config:
@@ -37,3 +38,23 @@ users:
 #       <plugins>
 #       </plugins>
 #     </broker>
+
+ssm_custom_resources:
+  custom_policies:
+    ssm:
+      action:
+        - ssm:PutParameter
+        - ssm:DeleteParameter
+      resource: '*'
+  roles:
+    SSMCustomResource:
+      policies_inline:
+        - cloudwatch-logs
+        - ssm
+  functions:
+    SSMSecureParameterCR:
+      code: handler.py
+      handler: handler.lambda_handler
+      runtime: python3.6
+      timeout: 15
+      role: SSMCustomResource
