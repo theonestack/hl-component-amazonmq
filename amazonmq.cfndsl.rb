@@ -49,12 +49,24 @@ CloudFormation do
   amq_users=[]
   users.each do |user|
 
-    Resource("#{user['username']}SSMSecureParameter") do
-      Type 'Custom::SSMSecureParameter'
-      Property 'ServiceToken',FnGetAtt('SSMSecureParameterCR','Arn')
-      Property 'Path', FnSub(user['ssm_path'])
-      Property 'Length', user['password_length'] if user.has_key?('password_length')
-    end
+    Resource("#{user['username']}SSMSecureParameter") {
+      Type "Custom::SSMSecureParameter"
+      Property('ServiceToken', FnGetAtt('SSMSecureParameterCR', 'Arn'))
+      Property('Length', user['password_length']) if user.has_key?('password_length')
+      Property('Path', FnSub("#{user['ssm_path']}/password"))
+      Property('Description', FnSub("${EnvironmentName} AMQ User #{user['username']} Password"))
+      Property('Tags',[
+        { Key: 'Name', Value: FnSub("${EnvironmentName}-#{user['username']}-amq-password")},
+        { Key: 'Environment', Value: FnSub("${EnvironmentName}")},
+        { Key: 'EnvironmentType', Value: FnSub("${EnvironmentType}")}
+      ])
+    }
+
+    SSM_Parameter("#{user['username']}ParameterSecretKey") {
+      Name FnSub("#{user['ssm_path']}/username")
+      Type 'String'
+      Value "#{user['username']}"
+    }
 
     user_object={}
     user_object[:Password] = FnGetAtt("#{user['username']}SSMSecureParameter","Password")

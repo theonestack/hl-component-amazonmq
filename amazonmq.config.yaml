@@ -43,11 +43,13 @@ ssm_custom_resources:
   custom_policies:
     ssm:
       action:
-        - ssm:PutParameter
+        - ssm:AddTagsToResource
         - ssm:DeleteParameter
+        - ssm:PutParameter
+        - ssm:GetParameters
       resource: '*'
   roles:
-    SSMCustomResource:
+    SSMParameterCustomResource:
       policies_inline:
         - cloudwatch-logs
         - ssm
@@ -56,5 +58,5 @@ ssm_custom_resources:
       code: handler.py
       handler: handler.lambda_handler
       runtime: python3.6
-      timeout: 15
-      role: SSMCustomResource
+      timeout: 5
+      role: SSMParameterCustomResource
