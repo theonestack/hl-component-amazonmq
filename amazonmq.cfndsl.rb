@@ -49,11 +49,13 @@ CloudFormation do
   amq_users=[]
   users.each do |user|
 
+    username_key = user.has_key?('username_key') ? user['username_key'] : 'username'
+    password_key = user.has_key?('password_key') ? user['password_key'] : 'password'
     Resource("#{user['username']}SSMSecureParameter") {
       Type "Custom::SSMSecureParameter"
       Property('ServiceToken', FnGetAtt('SSMSecureParameterCR', 'Arn'))
       Property('Length', user['password_length']) if user.has_key?('password_length')
-      Property('Path', FnSub("#{user['ssm_path']}/password"))
+      Property('Path', FnSub("#{user['ssm_path']}/#{password_key}"))
       Property('Description', FnSub("${EnvironmentName} AMQ User #{user['username']} Password"))
       Property('Tags',[
         { Key: 'Name', Value: FnSub("${EnvironmentName}-#{user['username']}-amq-password")},
@@ -63,7 +65,7 @@ CloudFormation do
     }
 
     SSM_Parameter("#{user['username']}ParameterSecretKey") {
-      Name FnSub("#{user['ssm_path']}/username")
+      Name FnSub("#{user['ssm_path']}/#{username_key}")
       Type 'String'
       Value "#{user['username']}"
     }
