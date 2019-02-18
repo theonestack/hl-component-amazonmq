@@ -23,6 +23,7 @@ CloudFormation do
 
   security_groups.each do |name, sg|
     sg['ports'].each do |port|
+
       EC2_SecurityGroupIngress("#{name}SGRule#{port['from']}") do
         Description FnSub("Allows #{port['from']} from #{name}")
         IpProtocol 'tcp'
@@ -30,7 +31,7 @@ CloudFormation do
         ToPort port.key?('to') ? port['to'] : port['from']
         GroupId FnGetAtt("SecurityGroup#{safe_component_name}",'GroupId') unless sg.has_key?('cidrip')
         SourceSecurityGroupId sg.key?('stack_param') ? Ref(sg['stack_param']) : Ref(name) unless sg.has_key?('cidrip')
-        CidrIp ip_blocks[sg['cidrip']][0] if sg.has_key?('cidrip')
+        CidrIp sg['cidrip'] if sg.has_key?('cidrip')
       end
     end if sg.key?('ports')
   end if defined? security_groups
