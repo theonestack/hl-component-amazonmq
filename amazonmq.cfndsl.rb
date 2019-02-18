@@ -29,7 +29,7 @@ CloudFormation do
         IpProtocol 'tcp'
         FromPort port['from']
         ToPort port.key?('to') ? port['to'] : port['from']
-        GroupId FnGetAtt("SecurityGroup#{safe_component_name}",'GroupId') unless sg.has_key?('cidrip')
+        GroupId FnGetAtt("SecurityGroup#{safe_component_name}",'GroupId')
         SourceSecurityGroupId sg.key?('stack_param') ? Ref(sg['stack_param']) : Ref(name) unless sg.has_key?('cidrip')
         CidrIp sg['cidrip'] if sg.has_key?('cidrip')
       end
