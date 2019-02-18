@@ -30,7 +30,7 @@ CloudFormation do
         ToPort port.key?('to') ? port['to'] : port['from']
         GroupId FnGetAtt("SecurityGroup#{safe_component_name}",'GroupId') unless sg.has_key?('cidrip')
         SourceSecurityGroupId sg.key?('stack_param') ? Ref(sg['stack_param']) : Ref(name) unless sg.has_key?('cidrip')
-        CidrIp ip_blocks[sg['cidrip']] if sg.has_key?('cidrip')
+        CidrIp ip_blocks[sg['cidrip']][0] if sg.has_key?('cidrip')
       end
     end if sg.key?('ports')
   end if defined? security_groups
