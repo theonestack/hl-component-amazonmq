@@ -47,7 +47,8 @@ ssm_custom_resources:
         - ssm:DeleteParameter
         - ssm:PutParameter
         - ssm:GetParameters
-      resource: '*'
+      resource:
+        - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/*
   roles:
     SSMParameterCustomResource:
       policies_inline:

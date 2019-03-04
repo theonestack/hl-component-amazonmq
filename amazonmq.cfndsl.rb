@@ -2,8 +2,6 @@ CloudFormation do
 
   Description "#{component_name} - #{component_version}"
 
-  az_conditions_resources('SubnetPersistence', maximum_availability_zones)
-
   Condition('IsMultiAZ', FnEquals(Ref('EnableMultiAZ'), 'true'))
 
   safe_component_name = component_name.capitalize.gsub('_','').gsub('-','')
@@ -19,6 +17,13 @@ CloudFormation do
     GroupDescription FnSub("${EnvironmentName}-#{component_name}")
     VpcId Ref('VPCId')
     Tags sg_tags
+    Metadata({
+      cfn_nag: {
+        rules_to_suppress: [
+          { id: 'F1000', reason: 'adding rules using cfn resources' }
+        ]
+      }
+    })
   end
 
   security_groups.each do |name, sg|
@@ -45,8 +50,8 @@ CloudFormation do
     }
   end
 
-  single_az_subnets = [Ref("SubnetPersistence0")]
-  multi_az_subnets = [Ref("SubnetPersistence0"),Ref("SubnetPersistence1")]
+  single_az_subnet = [FnSelect(0, Ref('SubnetIds'))]
+  multi_az_subnets = [FnSelect(0, Ref('SubnetIds')), FnSelect(1, Ref('SubnetIds'))]
 
   amq_users=[]
   users.each do |user|
@@ -102,7 +107,7 @@ CloudFormation do
     PubliclyAccessible publicly_accessable
 
     SecurityGroups [ Ref("SecurityGroup#{safe_component_name}") ]
-    SubnetIds FnIf('IsMultiAZ', multi_az_subnets, single_az_subnets)
+    SubnetIds FnIf('IsMultiAZ', multi_az_subnets, single_az_subnet)
 
     Users amq_users
 

@@ -1,0 +1,9 @@
+test_metadata:
+  type: config
+  name: Maintenance Window
+  description: Set AMQ AWS maintenance window
+
+maintenance_window:
+  day: 'Sunday'
+  time: '01:00'
+  timezone: 'Australia/Melbourne'

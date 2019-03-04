@@ -10,14 +10,11 @@ CfhighlanderTemplate do
     ComponentParam 'VPCId', type: 'AWS::EC2::VPC::Id'
     ComponentParam 'InstanceType', 'mq.t2.micro'
     ComponentParam 'EnableMultiAZ', false
+    ComponentParam 'SubnetIds', type: 'CommaDelimitedList'
 
     security_groups.each do |name, sg|
       ComponentParam name
     end if defined? security_groups
-
-    maximum_availability_zones.times do |az|
-      ComponentParam "SubnetPersistence#{az}"
-    end
 
     ComponentParam 'DnsDomain'
 
