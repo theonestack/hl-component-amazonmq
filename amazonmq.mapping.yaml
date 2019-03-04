@@ -1,5 +1,0 @@
-EnvironmentType:
-  development:
-    AmqInstanceType: t2.micro
-  production:
-    AmqInstanceType: t2.micro
