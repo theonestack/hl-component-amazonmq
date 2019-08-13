@@ -16,6 +16,7 @@ CloudFormation do
   EC2_SecurityGroup("SecurityGroup#{safe_component_name}") do
     GroupDescription FnSub("${EnvironmentName}-#{component_name}")
     VpcId Ref('VPCId')
+    SecurityGroupIngress generate_security_group_rules(security_group_rules,ip_blocks) if defined? security_group_rules
     Tags sg_tags
     Metadata({
       cfn_nag: {
@@ -26,6 +27,7 @@ CloudFormation do
     })
   end
 
+  # Plan to be depreciated at a further point
   security_groups.each do |name, sg|
     sg['ports'].each do |port|
 
