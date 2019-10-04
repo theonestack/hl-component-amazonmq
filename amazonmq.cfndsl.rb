@@ -138,8 +138,8 @@ CloudFormation do
   }
   
   Output(:OpenWireEndpoints) { 
-    Value FnGetAtt(:Broker, :OpenWireEndpoints)
-    Export FnSub("${EnvironmentName}-#{export}-openwire-endpoints")
+    Value FnJoin(',', FnGetAtt(:Broker, :OpenWireEndpoints))
+    Export FnSub("${EnvironmentName}-#{export}-openwire-endpoint-1")
   }
 
 end
