@@ -5,6 +5,7 @@ CloudFormation do
   Condition('IsMultiAZ', FnEquals(Ref('EnableMultiAZ'), 'true'))
 
   safe_component_name = component_name.capitalize.gsub('_','').gsub('-','')
+  export = defined?(export_name) ? export_name : component_name
 
   sg_tags = []
   sg_tags << { Key: 'Environment', Value: Ref(:EnvironmentName)}
@@ -131,6 +132,14 @@ CloudFormation do
     ResourceRecords [ FnSub('${Broker}-1.mq.${AWS::Region}.amazonaws.com') ]
   end
 
-  Output(:BrokerID) { Value(Ref(:Broker)) }
+  Output(:BrokerID) { 
+    Value Ref(:Broker)
+    Export FnSub("${EnvironmentName}-#{export}-broker-id")
+  }
+  
+  Output(:OpenWireEndpoints) { 
+    Value FnGetAtt(:Broker, :OpenWireEndpoints)
+    Export FnSub("${EnvironmentName}-#{export}-openwire-endpoints")
+  }
 
 end
