@@ -1,0 +1,6 @@
+test_metadata:
+  type: config
+  name: engine_version
+  description: override default amq engine version
+
+engine_version: '5.16.4'

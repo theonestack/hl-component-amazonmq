@@ -1,0 +1,8 @@
+test_metadata:
+  type: config
+  name: logging
+  description: enable logging
+
+logging:
+  audit: true
+  general: true

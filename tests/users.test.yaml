@@ -1,0 +1,14 @@
+test_metadata:
+  type: config
+  name: users
+  description: add additional users
+
+users:
+  - username: support
+    ssm_path: /amazonmq/support
+    console_access: true
+    groups:
+    - support
+  - username: application
+    ssm_path: /amazonmq/application
+    console_access: false

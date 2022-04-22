@@ -1,6 +1,6 @@
 test_metadata:
   type: config
-  name: Maintenance Window
+  name: maintenance_window
   description: Set AMQ AWS maintenance window
 
 maintenance_window:

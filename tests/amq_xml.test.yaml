@@ -1,6 +1,6 @@
 test_metadata:
   type: config
-  name: AMQ XML Config
+  name: amq_xml
   description: test with amq xml config
 
 amq_config: |
