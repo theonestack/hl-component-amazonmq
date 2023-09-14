@@ -28,6 +28,11 @@ CloudFormation do
     })
   end
 
+  Output("SecurityGroup#{safe_component_name}") {
+    Value(Ref("SecurityGroup#{safe_component_name}"))
+    Export FnSub("${EnvironmentName}-#{export}-SecurityGroup")
+  }
+
   # Plan to be depreciated at a further point
   security_groups.each do |name, sg|
     sg['ports'].each do |port|
