@@ -28,7 +28,7 @@ CloudFormation do
     })
   end
 
-  Output("SecurityGroup#{safe_component_name}") {
+  Output(:SecurityGroup) {
     Value(Ref("SecurityGroup#{safe_component_name}"))
     Export FnSub("${EnvironmentName}-#{export}-SecurityGroup")
   }
