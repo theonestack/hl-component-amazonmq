@@ -34,6 +34,6 @@ ssm_custom_resources:
     SSMSecureParameterCR:
       code: handler.py
       handler: handler.lambda_handler
-      runtime: python3.8
+      runtime: python3.11
       timeout: 5
       role: SSMParameterCustomResource
